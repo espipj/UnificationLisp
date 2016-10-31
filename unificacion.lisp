@@ -1,5 +1,4 @@
 ; Función que intercambia las variables para que e1 sea átomo
-;Prueba commit pablo
 (defun intercambiar (e1 e2)
     (if (atomo e1)
         (hacercosas e1 e2)
@@ -23,7 +22,7 @@
     )
 )
 
-; Comprueba si hay algo detras de '?
+; Comprueba si hay algo detras del '?
 (defun esvariable (var)
 
 )
