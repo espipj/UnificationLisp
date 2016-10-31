@@ -1,5 +1,5 @@
 ; Función que intercambia las variables para que e1 sea átomo
-; Funsiona?
+; Funsiona? Si jejeje
 (defun intercambiar (e1 e2)
     (if (atomo e1)
         (hacercosas e1 e2)
