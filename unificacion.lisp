@@ -1,7 +1,7 @@
 ; Función que intercambia las variables para que e1 sea átomo
 (defun intercambiar (e1 e2)
     (if (atomo e1)
-        (hacercosas e1 e2)
+        (e1atomo e1 e2)
         (if (atomo e2)
             (progn
                 (setf temp e2)
@@ -35,7 +35,7 @@
     (if (equalp e1 e2) ; Si e1=e2 no hacer nada
         (return 'nada)
         (if (esvariable e1)
-            (if (member e1 e2)
+            (if (member e1 e2) ; Member es recursivo??
                  (return 'fallo)
                  (return 'e2/e1)
             )
