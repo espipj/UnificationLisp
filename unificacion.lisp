@@ -9,7 +9,6 @@
                 (setf e1 temp)
                 (e1atomo e1 e2)
             )
-            (format t "Salto a 12") ; Salto a linea 12 en lugar del if de arriba
         )
     )
 )
@@ -24,8 +23,10 @@
 
 ; Comprueba si hay algo detras del '?
 (defun esvariable (var)
-    (cond ((eq (first var) '?) t)
-        (t nil)
+    (unless (atom var)
+        (cond ((eq (first var) '?) t)
+            (t nil)
+        )
     )
 )
 
@@ -33,16 +34,21 @@
 (defun e1atomo (e1 e2)
     (format t "E1=~a, E2=~b" e1 e2)
     (if (equalp e1 e2) ; Si e1=e2 no hacer nada
-        (return 'nada)
+        (return-from e1atomo 'nada)
         (if (esvariable e1)
             (if (member e1 e2) ; Member es recursivo??
-                 (return 'fallo)
-                 (return 'e2/e1)
+                 (return-from e1atomo 'fallo)
+                 (return-from e1atomo 'e2/e1)
             )
             (if (esvariable e2)
-                 (return 'e1/e2)
-                 (return 'fallo)
+                 (return-from e1atomo 'e1/e2)
+                 (return-from e1atomo 'fallo)
             )
         )
     )
+)
+
+(defun unificar (e1 e2)
+    (intercambiar e1 e2)
+    (format t "Salto a 12") ; Salto a linea 12 en lugar del if de arriba
 )
