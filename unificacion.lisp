@@ -1,16 +1,6 @@
-; Función que intercambia las variables para que e1 sea átomo
-(defun intercambiar (e1 e2)
-    (if (atomo e1)
-        (e1atomo e1 e2)
-        (if (atomo e2)
-            (progn
-                (setf temp e2)
-                (setf e2 e1)
-                (setf e1 temp)
-                (e1atomo e1 e2)
-            )
-        )
-    )
+; Función principal que captura excepciones
+(defun unificacion (e1 e2)
+    (catch 'unificacionException (unificar e1 e2))
 )
 
 ; Función que comprueba si var es un átomo
@@ -22,7 +12,7 @@
 )
 
 ; Comprueba si hay algo detras del '?
-(defun esvariable (var)
+(defun esVariable (var)
     (unless (atom var)
         (cond ((eq (first var) '?) t)
             (t nil)
@@ -31,25 +21,39 @@
 )
 
 ; Función que hace cosas siendo e1 atomo
-(defun e1atomo (e1 e2)
+(defun anadir (e1 e2)
     (format t "E1=~a, E2=~b" e1 e2)
-    (if (equalp e1 e2) ; Si e1=e2 no hacer nada
-        (return-from e1atomo 'nada)
-        (if (esvariable e1)
+    (unless (equalp (valorVariable e1) (valorVariable e2)) ; Si e1=e2 no hacer nada
+        (if (esVariable e1)
             (if (member e1 e2) ; Member es recursivo??
-                 (return-from e1atomo 'fallo)
-                 (return-from e1atomo 'e2/e1)
+                 (return-from anadir 'fallo)
+                 (return-from anadir 'e2/e1)
             )
-            (if (esvariable e2)
-                 (return-from e1atomo 'e1/e2)
-                 (return-from e1atomo 'fallo)
+            (if (esVariable e2)
+                 (return-from anadir 'e1/e2)
+                 (return-from anadir 'fallo)
             )
         )
     )
 )
 
-(defun unificar (e1 e2)
-    (intercambiar e1 e2)
-    (format t "Salto a 12") ; Salto a linea 12 en lugar del if de arriba
+(defun valorVariable (variable)
+    (if (esVariable variable)
+      (first(rest variable))
+      variable
+    )
 )
-Hola
+
+(defun unificar (e1 e2)
+    (if (atomo e1)
+        (if (atomo e2)
+            (throw 'unificacionException 'Dos-atomos-No-Unificable)
+            (anadir e1 e2)
+        )
+        (if (atomo e2)
+            (anadir e2 e1)
+        )
+    )
+    ; e1 y e2 son listas
+    (format t "Linea 12")
+)
