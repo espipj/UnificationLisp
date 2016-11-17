@@ -46,18 +46,23 @@
 
 (defun unificar (e1 e2)
     (cond
-        (if (atomo e1)
-            (if (atomo e2)
-                (throw 'unificacionException 'Dos-atomos-No-Unificable)
-                (anadir e1 e2)
-            )
-            (if (atomo e2)
-                (anadir e2 e1)
-            )
+        ((and (atom e1) (atom e2))
+            (throw 'unificacionException 'Dos-atomos-No-Unificable)
+        )
+        ((atomo e1)
+            (anadir e1 e2)
+        )
+        ((atomo e2)
+            (anadir e2 e1)
         )
         (t
-          ; e1 y e2 son listas
-          (format t "Linea 12")
+            ; e1 y e2 son listas
+            (format t "Linea 12")
+            (let ((f1 (first e1))
+                  (t1 (rest e1))
+                  (f2 (first e2))
+                  (t2 (rest e2)))
+            )
         )
     )
 )
