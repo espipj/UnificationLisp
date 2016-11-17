@@ -50,6 +50,5 @@
 
 (defun unificar (e1 e2)
     (intercambiar e1 e2)
-    (format t "E1=~a, E2=~b" e1 e2)
     (format t "Salto a 12") ; Salto a linea 12 en lugar del if de arriba
 )
