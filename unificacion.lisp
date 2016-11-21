@@ -46,9 +46,12 @@
 
 (defun unificar (e1 e2)
     (cond
-        ((and (atom e1) (atom e2))
-            (throw 'unificacionException 'Dos-atomos-No-Unificable)
+        ((or (null e1) (null e2)
+            (throw 'unificacionException 'Variable-nula-No-Unificable)
         )
+        ; ((and (atom e1) (atom e2))
+        ;     (throw 'unificacionException 'Dos-atomos-No-Unificable)
+        ; )
         ((atomo e1)
             (anadir e1 e2)
         )
