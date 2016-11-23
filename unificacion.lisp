@@ -61,7 +61,8 @@
 (defun unificar (e1 e2)
     (cond
         ((or (null e1) (null e2))
-            (throw 'unificacionException 'Variable-nula-No-Unificable)
+            ; (throw 'unificacionException 'Variable-nula-No-Unificable)
+            nil
         )
         ; ((and (atom e1) (atom e2))
         ;     (throw 'unificacionException 'Dos-atomos-No-Unificable)
@@ -103,7 +104,7 @@
                     (return-from unificar 'fallo)
                 )
                 (setf composicion (list z1 z2))
-                (format t "Composicion=~c~%" composicion)
+                (print composicion)
                 (return-from unificar composicion)
             )
         )
@@ -112,8 +113,32 @@
 
 ; Función que sustituye en lista siguiendo lo indicado en expresion
 (defun aplicar (expresion lista)
+    ; (format t "Lista:")
+    ; (print lista)
+    ; (format t "~%")
+    ; (format t "Expresion:")
+    ; (print expresion)
+    ; (format t "~%")
     (cond
         ((null expresion) lista)
+        ((null lista) nil)
+        ((atomo lista)
+            (if (equalp lista (first (last expresion)))
+                (first expresion)
+                lista
+            )
+        )
+        ((equalp lista (first expresion))
+            (last expresion)
+        )
+        (t
+            ; (format t "Aplicacion~%")
+            (cons
+                (aplicar expresion (first lista))
+                (aplicar expresion (rest lista))
+            )
+        )
     )
 )
-;Aqui fallecio agregacion
+
+;Aqui fallecio Agregación
