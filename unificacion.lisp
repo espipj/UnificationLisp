@@ -3,7 +3,7 @@
 ; © 2016: Todos los derechos reservados
 
 ; Prueba:
-; (unificacion '(P '(? x) '((? g) '(? x))) '(P A '(? z)))
+; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 
 ; Función principal que captura excepciones
 (defun unificacion (e1 e2)
@@ -32,15 +32,21 @@
     (format t "Anadir: E1=~a, E2=~b~%" e1 e2)
     (unless (equalp (valorVariable e1) (valorVariable e2)) ; Si e1=e2 no hacer nada
         (if (esVariable e1)
-            (if (member e1 e2) ; Member es recursivo??
+            (if (miembro e1 e2)
                  (return-from anadir 'fallo)
-                 (return-from anadir 'e2/e1)
+                 (list e2 e1)
             )
             (if (esVariable e2)
-                 (return-from anadir 'e1/e2)
+                 (list e1 e2)
                  (return-from anadir 'fallo)
             )
         )
+    )
+)
+
+(defun miembro (e1 e2)
+    (unless (atom e2)
+        (member e1 e2)
     )
 )
 
@@ -110,3 +116,4 @@
         ((null expresion) lista)
     )
 )
+;Aqui fallecio agregacion
