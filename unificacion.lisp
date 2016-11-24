@@ -87,7 +87,7 @@
                   (f2 (first e2))
                   (t2 (rest e2)))
                 (setf z1 (unificar f1 f2))
-                (format t "z1 = ~a~%" z1)
+                ; (format t "z1 = ~a~%" z1)
                 (if (equalp z1 'fallo)
                     (progn
                         (format t "Falla aqui~%")
@@ -95,15 +95,22 @@
                     )
                 )
                 (setf g1 (aplicar z1 t1))
-                (format t "g1 = ~g~%" g1)
+                ; (format t "g1 = ~g~%" g1)
                 (setf g2 (aplicar z1 t2))
-                (format t "g2 = ~g~%" g2)
+                ; (format t "g2 = ~g~%" g2)
                 (setf z2 (unificar g1 g2))
-                (format t "z2 = ~a~%" z2)
+                ; (format t "z2 = ~a~%" z2)
                 (if (equalp z2 'fallo)
                     (return-from unificar 'fallo)
                 )
-                (setf composicion (list z1 z2))
+
+                (format t "z1 = ")
+                (print z1)
+                (format t "z2 = ")
+                (print z2)
+
+                (setf composicion (componer z1 z2))
+                (format t "composicion = ")
                 (print composicion)
                 (return-from unificar composicion)
             )
@@ -142,3 +149,13 @@
 )
 
 ;Aqui fallecio Agregación
+
+(defun componer (lista1 lista2)
+    (cond
+        ((null lista1) lista2)
+        ((null lista2) lista1)
+        (t
+            (list lista1 lista2)
+        )
+    )
+)
