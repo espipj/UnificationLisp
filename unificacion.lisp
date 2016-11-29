@@ -3,6 +3,7 @@
 ; © 2016: Todos los derechos reservados
 
 ; Prueba:
+; (load "unificacion.lisp")
 ; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 
 ; Función principal que captura excepciones
@@ -85,7 +86,9 @@
             (let ((f1 (first e1))
                   (t1 (rest e1))
                   (f2 (first e2))
-                  (t2 (rest e2)))
+                  (t2 (rest e2))
+                  (z1 nil)
+                  (z2 nil))
                 (setf z1 (unificar f1 f2))
                 ; (format t "z1 = ~a~%" z1)
                 (if (equalp z1 'fallo)
