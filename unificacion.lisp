@@ -207,7 +207,7 @@
         (t
             ; (aplicar lista2 lista1)
             (if (equalp (first (rest lista1)) 'barra)
-                (setf listaBuena (list (aplicar lista2 (first lista1)) (rest lista1)))
+                (setf listaBuena (list (aplicar lista2 (first lista1)) (first(rest lista1)) (first (rest (rest lista1)))))
                 (list (componer (first lista1) lista2) (componer (rest lista1) lista2))
             )
             (list listaBuena lista2)
