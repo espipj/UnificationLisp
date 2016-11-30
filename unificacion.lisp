@@ -123,27 +123,37 @@
 
 ; Función que sustituye en lista siguiendo lo indicado en expresion
 (defun aplicar (expresion lista)
-    ; (format t "Lista:")
-    ; (print lista)
-    ; (format t "~%")
-    ; (format t "Expresion:")
-    ; (print expresion)
-    ; (format t "~%")
+    (format t "Lista:")
+    (print lista)
+    (format t "~%")
+    (format t "Expresion:")
+    (print expresion)
+    (format t "~%")
     (cond
-        ((null expresion) lista)
+        ((or (null expresion) (atomo expresion)) lista)
         ((null lista) nil)
-        ((atomo lista)
-            (if (equalp lista (first (last expresion)))
+        ; ((atomo lista)
+        ;     (if (equalp lista (first (last expresion)))
+        ;         (first expresion)
+        ;         lista
+        ;     )
+        ; )
+        ; ((equalp lista (last expresion))
+        ;     (first expresion)
+        ; )
+        ((esVariable lista)
+            (if (equalp lista (last expresion))
                 (first expresion)
                 lista
             )
         )
-        ((equalp lista (first expresion))
-            (last expresion)
+        ((equalp lista (last expresion))
+            (first expresion)
         )
+        ((atom lista) lista)
         (t
             ; (format t "Aplicacion~%")
-            (cons
+            (list
                 (aplicar expresion (first lista))
                 (aplicar expresion (rest lista))
             )
@@ -158,6 +168,7 @@
         ((null lista1) lista2)
         ((null lista2) lista1)
         (t
+            ; (aplicar lista2 lista1)
             (list lista1 lista2)
         )
     )
