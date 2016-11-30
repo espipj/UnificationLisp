@@ -7,8 +7,7 @@
 ; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 
 ; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
-; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
-
+; (componer ('(((? g) ((? x)(? y))) barra (? z)))
 
 ; Función principal que captura excepciones
 (defun unificacion (e1 e2)
@@ -208,10 +207,10 @@
         (t
             ; (aplicar lista2 lista1)
             (if (equalp (first (rest lista1)) 'barra)
-                (list (aplicar lista2 (first lista1)) (rest lista1))
+                (setf listaBuena (list (aplicar lista2 (first lista1)) (rest lista1)))
                 (list (componer (first lista1) lista2) (componer (rest lista1) lista2))
             )
-            (list lista1 lista2)
+            (list listaBuena lista2)
         )
     )
 )
