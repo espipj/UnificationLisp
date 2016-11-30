@@ -6,6 +6,10 @@
 ; (load "unificacion.lisp")
 ; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 
+; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
+; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
+
+
 ; Función principal que captura excepciones
 (defun unificacion (e1 e2)
     (catch 'unificacionException (unificar e1 e2))
@@ -30,15 +34,15 @@
 
 ; Función que hace cosas siendo e1 atomo
 (defun anadir (e1 e2)
-    (format t "Anadir: E1=~a, E2=~b~%" e1 e2)
+    ; (format t "Anadir: E1=~a, E2=~b~%" e1 e2)
     (unless (equalp (valorVariable e1) (valorVariable e2)) ; Si e1=e2 no hacer nada
         (if (esVariable e1)
             (if (miembro e1 e2)
                  (return-from anadir 'fallo)
-                 (list e2 e1)
+                 (list e2 'barra e1)
             )
             (if (esVariable e2)
-                 (list e1 e2)
+                 (list e1 'barra e2)
                  (return-from anadir 'fallo)
             )
         )
@@ -70,19 +74,19 @@
         ; )
         ((atomo e1)
             (progn
-                (format t "Atomo e1? E1=~a, E2=~b~%" e1 e2)
+                ; (format t "Atomo e1? E1=~a, E2=~b~%" e1 e2)
                 (anadir e1 e2)
             )
         )
         ((atomo e2)
             (progn
-                (format t "Atomo e2? E1=~a, E2=~b~%" e1 e2)
+                ; (format t "Atomo e2? E1=~a, E2=~b~%" e1 e2)
                 (anadir e2 e1)
             )
         )
         (t
             ; e1 y e2 son listas
-            (format t "Linea 12~%")
+            ; (format t "Linea 12~%")
             (let ((f1 (first e1))
                   (t1 (rest e1))
                   (f2 (first e2))
@@ -93,7 +97,7 @@
                 ; (format t "z1 = ~a~%" z1)
                 (if (equalp z1 'fallo)
                     (progn
-                        (format t "Falla aqui~%")
+                        ; (format t "Falla aqui~%")
                         (return-from unificar 'fallo)
                     )
                 )
@@ -107,14 +111,14 @@
                     (return-from unificar 'fallo)
                 )
 
-                (format t "z1 = ")
-                (print z1)
-                (format t "z2 = ")
-                (print z2)
+                ; (format t "z1 = ")
+                ; (print z1)
+                ; (format t "z2 = ")
+                ; (print z2)
 
                 (setf composicion (componer z1 z2))
-                (format t "composicion = ")
-                (print composicion)
+                ; (format t "composicion = ")
+                ; (print composicion)
                 (return-from unificar composicion)
             )
         )
@@ -132,6 +136,26 @@
     (cond
         ((or (null expresion) (atomo expresion)) lista)
         ((null lista) nil)
+        ((not(equalp (first (rest expresion)) 'barra))
+            (format t "A~%")
+            (aplicar (rest expresion) (aplicar (first expresion) lista))
+            ; (setf parte1 (aplicar (first expresion) lista))
+            ; (if (null parte1)
+            ;     (aplicar (rest expresion) lista)
+            ;     (progn
+            ;         (setf parte2 (aplicar (rest expresion) parte1))
+            ;         (if (null parte2)
+            ;             lista
+            ;             parte2
+            ;         )
+            ;     )
+            ; )
+        )
+        ; IMPORTANTE
+        ; ((equalp (first (rest lista)) 'barra)
+        ;
+        ; )
+
         ; ((atomo lista)
         ;     (if (equalp lista (first (last expresion)))
         ;         (first expresion)
@@ -142,21 +166,35 @@
         ;     (first expresion)
         ; )
         ((esVariable lista)
-            (if (equalp lista (last expresion))
-                (first expresion)
-                lista
+          (format t "B~%")
+            (if (equalp lista (first (last expresion)))
+                (progn (format t "sustitucion: ") (print (first expresion)) (first expresion))
+                (progn (format t "no sustitucion~%") lista)
             )
         )
         ((equalp lista (last expresion))
+            (format t "C~%")
             (first expresion)
         )
         ((atom lista) lista)
         (t
-            ; (format t "Aplicacion~%")
-            (list
-                (aplicar expresion (first lista))
-                (aplicar expresion (rest lista))
+            (format t "Default~%")
+            (setf parte1 (aplicar expresion (first lista)))
+            (setf parte2 (aplicar expresion (rest lista)))
+            (if (null parte1)
+                parte2
+                (if (null parte2)
+                    parte1
+                    (list
+                        (aplicar expresion (first lista))
+                        (aplicar expresion (rest lista))
+                    )
+                )
             )
+            ; (list
+            ;     (aplicar expresion (first lista))
+            ;     (aplicar expresion (rest lista))
+            ; )
         )
     )
 )
@@ -169,6 +207,10 @@
         ((null lista2) lista1)
         (t
             ; (aplicar lista2 lista1)
+            (if (equalp (first (rest lista1)) 'barra)
+                (list (aplicar lista2 (first lista1)) (rest lista1))
+                (list (componer (first lista1) lista2) (componer (rest lista1) lista2))
+            )
             (list lista1 lista2)
         )
     )
