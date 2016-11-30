@@ -214,3 +214,4 @@
         )
     )
 )
+; ((A BARRA (? X)) (B BARRA (? Y)) (C BARRA (? W)) (D BARRA (? Z)))
