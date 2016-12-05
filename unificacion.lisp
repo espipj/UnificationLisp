@@ -3,11 +3,12 @@
 ; © 2016: Todos los derechos reservados
 
 ; Prueba:
-; (load "unificacion.lisp")
-; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
+;
+;
+;;;;
 
 ; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
-; (componer ('(((? g) ((? x)(? y))) barra (? z)))
+; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
 
 ; Función principal que captura excepciones
 (defun unificacion (e1 e2)
@@ -59,6 +60,15 @@
     (if (esVariable variable)
       (first(rest variable))
       variable
+    )
+)
+
+(defun esExpresion (expresion)
+    (cond
+        ((atomo expresion) nil)
+        (t
+            (equalp (first (rest expresion)) 'barra)
+        )
     )
 )
 
@@ -201,17 +211,80 @@
 ;Aqui fallecio Agregación
 
 (defun componer (lista1 lista2)
+(format t "Componer Lista1:")
+(print lista1)
+(format t "~%")
+(format t "Componer Lista2:")
+(print lista2)
+(format t "~%")
     (cond
         ((null lista1) lista2)
         ((null lista2) lista1)
         (t
             ; (aplicar lista2 lista1)
-            (if (equalp (first (rest lista1)) 'barra)
-                (setf listaBuena (list (aplicar lista2 (first lista1)) (first(rest lista1)) (first (rest (rest lista1)))))
-                (list (componer (first lista1) lista2) (componer (rest lista1) lista2))
+            (cond
+                ((and (esExpresion lista1) (esExpresion lista2))
+                    (if (equalp lista1 lista2)
+                        lista1
+                        (list lista1 lista2)
+                    )
+                )
+                ((esExpresion lista1)
+                    (progn
+                        (setf listaBuena (list (aplicar lista2 (first lista1)) 'barra (first (last lista1))))
+                        (flatten (list listaBuena lista2))
+                    )
+                )
+                ((esExpresion lista2)
+                    (progn
+                        (print "Se mete")
+                        (setf listaBuena (flatten (list (componer (first lista1) lista2) (componer (rest lista1) lista2))))
+                        (flatten (list listaBuena lista2))
+                        ; (list (componer lista1 (first lista2)) (componer (rest lista1) lista2))
+                    )
+                )
             )
-            (list listaBuena lista2)
+            ; (list listaBuena lista2)
+            ; (comprecur listaBuena lista2)
         )
     )
 )
+
+
+
+(defun flatten (l)
+    (cond ((null l) nil)
+        ((atom l) (list l))
+        ((esExpresion l) (list l))
+        (t
+            (loop for a in l appending (flatten a))
+        )
+    )
+)
+
+;Recursividad para componer
+; (defun comprecur (l1 l2)
+;     (cond
+;         ((and (equalp (first (rest l1)) 'barra) (equalp (first (rest l2)) 'barra))
+;             ; Las dos son expresiones
+;             (list l1 l2)
+;         )
+;         ((equalp (first (rest l1)) 'barra)
+;             ; l1 es expresion, descomponer l2
+;             (list l1 (componer (componer l1 (first l2)) (rest l2)))
+;         )
+;         ((equalp (first (rest l2)) 'barra)
+;             ; l2 es expresion, descomponer l1
+;             (list l1 (componer (componer l2 (first l1)) (rest l1)))
+;         )
+;         (t
+;             ; Las dos son listas
+;
+;         )
+;     )
+;     ; (list listaBuena lista2)
+; )
 ; ((A BARRA (? X)) (B BARRA (? Y)) (C BARRA (? W)) (D BARRA (? Z)))
+ ;
+ ; ((((? G) (A B)) BARRA (? Z))
+ ;  ((A BARRA (? X)) (B BARRA (? Y)) (C BARRA (? W)) (D BARRA (? Z))))
