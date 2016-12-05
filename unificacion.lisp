@@ -3,9 +3,8 @@
 ; © 2016: Todos los derechos reservados
 
 ; Prueba:
-;
-;
-;;;;
+; (load "unificacion.lisp")
+; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 
 ; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
 ; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
@@ -232,7 +231,8 @@
                 ((esExpresion lista1)
                     (progn
                         (setf listaBuena (list (aplicar lista2 (first lista1)) 'barra (first (last lista1))))
-                        (flatten (list listaBuena lista2))
+                        (flatten (list listaBuena (unir (first (last lista1)) lista2)))
+                        ; (flatten (list listaBuena lista2))
                     )
                 )
                 ((esExpresion lista2)
@@ -246,6 +246,43 @@
             )
             ; (list listaBuena lista2)
             ; (comprecur listaBuena lista2)
+        )
+    )
+)
+
+(defun unir (elemento lista)
+    (format t "lista: ")
+    (print lista)
+    (cond
+        ((null lista) nil)
+        ((esExpresion lista)
+            (if (equalp elemento (first (last lista)))
+                (progn
+                    (print "entra en el if")
+                    nil
+                )
+                (progn
+                    (print "no entra en el if")
+                    lista
+                )
+            )
+        )
+        (t
+            (let ((parte1 nil)
+                  (parte2 nil))
+                (setf parte1 (unir elemento (first lista)))
+                (setf parte2 (unir elemento (rest lista)))
+                (if (null parte1)
+                    (if (null parte2)
+                        nil
+                        parte2
+                    )
+                    (if (null parte2)
+                        parte1
+                        (flatten (list parte1 parte2))
+                    )
+                )
+            )
         )
     )
 )
