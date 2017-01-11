@@ -2,11 +2,33 @@
 ; Rafael González Martín
 ; © 2016: All Rights Reserved
 
-; Pruebas:
+; Pruebas generales:
 ; (load "unificacion.lisp")
+; (unificacion '(F (? x)) '(F a))
+; (unificacion '(F (? x) (? y)) '(F (? x) A))
 ; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
 ; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
 ; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
+; ###########------Pruebas atómicas-------###########
+; (atomo 'A)
+; (atomo '(A B))
+; (esVariable '(? B))
+; (esVariable '(B))
+; (anadir 'A '(B C))
+; (anadir 'A '(A C))
+; (anadir 'A '(? C))
+; (miembro 'A '(A C))
+; (miembro 'B '(A C))
+; (miembro 'B 'C)
+; (valorVariable '(? B))
+; (esExpresion '(A barra (? x)))
+; (unificacion '(P (? x) ((? g) (? x))) '(P A (? z)))
+; (aplicar '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))) '(((? g) ((? x)(? y))) (? z)))
+; (componer '(((? g) ((? x)(? y))) barra (? z)) '((A barra (? x)) (B barra (? y)) (C barra (? w)) (D barra (? z))))
+; (unir '(? Z) '((A BARRA (? X)) (B BARRA (? Y)) (C BARRA (? W)) (D BARRA (? Z))))
+; (flatten '((A) (B)))
+
+;###################################################
 
 ; Función que comprueba si var es un átomo
 (defun atomo (var)
@@ -17,6 +39,7 @@
 )
 
 ; Comprueba si hay algo detras del '?
+
 (defun esVariable (var)
     (unless (atom var)
         (cond ((eq (first var) '?) t)
