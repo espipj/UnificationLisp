@@ -11,4 +11,4 @@ A solution of a unification problem is denoted as a substitution, that is, a map
 More info at: https://en.wikipedia.org/wiki/Unification_(computer_science)
 
 
-Developed in Intelligent Systems Fundamentals at University of Salamanca by Rafa Gonzalez and Pablo Espinosa.
+Developed in Intelligent Systems Fundamentals at University of Salamanca by Rafael Gonzalez and Pablo Espinosa.
