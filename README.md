@@ -1,6 +1,6 @@
 Unification Lisp
 
-Development of the Unification algorithm in Lisp.
+Development of the Unification algorithm in Lisp. We could say that prolog "engine" is the unification algorithm.
 
 Wiki: "In logic and computer science, unification is an algorithmic process of solving equations between symbolic expressions.
 
